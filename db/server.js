@@ -19,7 +19,8 @@ app.post("/user", async (request, response) => {
     try {
         var user = new UserModel(request.body);
         var result = await user.save();   // viec tao user ton tg nen can su dung co che xu ly bat dong bo
-        response.send(result);            //tra ke qua ve cho client
+        Message = 'Create success'  ;       
+        response.send(Message);  //tra ke qua ve cho client
     } catch (error) {
         response.status(500).send(error);
     }
@@ -52,6 +53,7 @@ app.put("/user/:id", async (request, response) => {
         var user = await UserModel.findById(request.params.id).exec();
         user.set(request.body);
         var result = await user.save();
+       
         response.send(result);
     } catch (error) {
         response.status(500).send(error);
@@ -68,9 +70,6 @@ app.delete("/user/:id", async (request, response) => {
     }
 });
 
-app.use('/', (req, res) =>{
-    res.json({"mess": "Hello"})
-})
 // Define REST API  
 app.post("/user", async (request, response) => {});     // creae new user
 app.get("/user", async (request, response) => {});      // get list user
