@@ -6,7 +6,6 @@ const cors = require('cors');
 const mainRoute = require("./routes/main");
 const dbConfig = require('./config/database.config');
 const routes = require('./routes');
-const { route } = require('./routes/main');
 
 // create express app
 const app = express();
@@ -34,7 +33,6 @@ mongoose.connect(
 // set up port
 const port = 3000;
 // set up route
-// app.use('/api/', mainRoute)
 
 routes.auth(app)
 routes.user(app)
