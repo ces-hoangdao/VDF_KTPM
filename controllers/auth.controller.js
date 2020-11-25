@@ -18,6 +18,7 @@ exports.signUp = (req, res) => {
         return res.status(201).json({
           success: true,
           message: 'New user created successfully',
+          user: user.userName
         });
       })
       .catch((error) => {
