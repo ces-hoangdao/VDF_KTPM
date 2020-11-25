@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const bodyParser = require('body-parser');
 const logger = require("morgan");
 const cors = require('cors');
-const mainRoute = require("./routes/main");
 const dbConfig = require('./config/database.config');
 const routes = require('./routes');
 
