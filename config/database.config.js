@@ -5,8 +5,8 @@ const dbConfig = {
     database: 'VDF'
 }
 
-var connectionStr = `mongodb+srv://${dbConfig.userName}:${dbConfig.password}@cluster0.fbfmi.mongodb.net/${dbConfig.database}?authSource=admin&replicaSet=atlas-auobh6-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true`
-
+//var connectionStr = `mongodb+srv://${dbConfig.userName}:${dbConfig.password}@cluster0.fbfmi.mongodb.net/${dbConfig.database}?authSource=admin&replicaSet=atlas-auobh6-shard-0&w=majority&readPreference=primary&appname=MongoDB%20Compass&retryWrites=true&ssl=true`
+var connectionStr = `mongodb://localhost:27017/vdf`
 module.exports = {
     url: connectionStr
 }
