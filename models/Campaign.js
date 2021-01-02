@@ -15,10 +15,15 @@ const Campaign = mongoose.model(
         owner: {
             type: mongoose.Schema.Types.ObjectId, ref: 'User'
         },
-        categoryId: String,
+        categoryId: String,                                 
         statusId: String,
         goal: Number,
-        isDelete: Boolean
+        donation: [
+            { 
+                type: mongoose.Schema.Types.ObjectId, 
+                ref: 'Donation'
+            }
+        ]
     })
 )
 

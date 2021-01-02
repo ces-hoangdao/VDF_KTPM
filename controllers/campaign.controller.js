@@ -17,6 +17,7 @@ exports.index = (req, res) => {
     }
     Campaign.find({})
     .populate('owner')
+    .populate('donation')
     .exec(function (err, campaigns) {
         if (err) {
             return res.status(500).send(err);

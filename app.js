@@ -36,6 +36,7 @@ const port = 3000;
 routes.auth(app)
 routes.user(app)
 routes.campaign(app)
+routes.donation(app)
 
 app.get('/', (req, res) => {
   res.status(200).json({
