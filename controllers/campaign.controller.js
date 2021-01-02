@@ -6,6 +6,7 @@ const config = require('../config/auth.config')
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { json } = require("body-parser");
+const { user } = require("../models");
 
 exports.index = (req, res) => {
     console.log("campaign index: ");
@@ -18,6 +19,16 @@ exports.index = (req, res) => {
     })
     .catch((err) => {
 
+    })
+}
+
+exports.indexByUserId = (req, res) => {
+    const userId = req.param('userId')
+    Campaign.find({ownerId: userId}, function(err, campaigns) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        return res.status(200).send(campaigns)
     })
 }
 
@@ -66,43 +77,66 @@ exports.show = (req, res) => {
 
 exports.update = (req, res) => {
     const campaignId = req.param('campaignId')
+    const userId = req.userId
     console.log("update campaign: " + campaignId)
-    Campaign.findByIdAndUpdate(
-        {_id: campaignId},
-        req.body,
-        function (err, campaign) {
-            if (err) {
-                return res.status(500).json({
-                    success: false,
-                    message: 'Server error. Please try again.',
-                    error: error.message,
-                })
-            }
 
+    Campaign.findOne({_id : campaignId}, function (err, campaign) {
+        console.log("ownerId: " + campaign.ownerId)
+        console.log("ownerId: " + userId)
+        if (campaign.ownerId === userId) {
+            Campaign.findByIdAndUpdate(
+                {_id: campaignId},
+                req.body,
+                function (err, campaign) {
+                    if (err) {
+                        return res.status(500).json({
+                            success: false,
+                            message: 'Server error. Please try again.',
+                            error: error.message,
+                        })
+                    }
+        
+                    return res.status(200).json({
+                        success: true,
+                        message: 'Update successfully.',
+                    })
+                }
+            )
+        } else {
             return res.status(200).json({
                 success: true,
-                message: 'Update successfully.',
+                message: 'unauthorized request',
             })
         }
-    )
+    })
 }
 
 exports.destroy = (req, res) => {
     const campaignId = req.param('campaignId')
-    console.log("delete campaing: " + campaignId)
-    Campaign.findByIdAndDelete(campaignId, function(err, campaign) {
-        if (err) {
-            return res.status(500).json({
-                success: false,
-                message: 'Server error. Please try again.',
-                error: error.message,
+    const userId = req.userId
+
+    Campaign.findOne({_id : campaignId}, function (err, campaign) {
+        if (campaign.ownerId === userId) {
+            Campaign.findByIdAndDelete(campaignId, function(err, campaign) {
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: 'Server error. Please try again.',
+                        error: error.message,
+                    })
+                }
+        
+                return res.status(200).json({
+                    success: true,
+                    message: 'Delete successfully.',
+                })
+            })
+        } else {
+            return res.status(200).json({
+                success: true,
+                message: 'Unauthorize request.',
             })
         }
-
-        return res.status(200).json({
-            success: true,
-            message: 'Delete successfully.',
-        })
     })
 }
 
