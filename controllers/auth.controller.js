@@ -7,28 +7,31 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signUp = (req, res) => {
-    console.log(JSON.stringify(req.body))
-    const user = new User({
-        userName: req.body.userName,
-        email: req.body.email,
-        password: bcrypt.hashSync(req.body.password, 8)
-    })
+    console.log("signUp: " + JSON.stringify(req.body))
+    try {
+        const user = new User({
+            userName: req.body.userName,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 8)
+        })
 
-    user.save().then((newUser) => {
-        return res.status(201).json({
-          success: true,
-          message: 'New user created successfully',
-          user: user.userName
-        });
-      })
-      .catch((error) => {
-          console.log(error);
-        res.status(500).json({
-          success: false,
-          message: 'Server error. Please try again.',
-          error: error.message,
-        });
-      });
+        user.save().then((newUser) => {
+            return res.status(201).json({
+              success: true,
+              message: 'New user created successfully',
+              user: user.userName
+            });
+          })
+          .catch((error) => {
+              console.log(error);
+            res.status(500).json({
+              success: false,
+              message: 'Server error. Please try again.',
+              error: error.message,
+            });
+          });
+    } catch (e) {
+    }
 }
 
 exports.signIn = (req, res) => {
