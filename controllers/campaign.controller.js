@@ -7,23 +7,28 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { json } = require("body-parser");
 const { user } = require("../models");
+const User = require("../models/User");
 
 exports.index = (req, res) => {
     console.log("campaign index: ");
-    
-    Campaign.find({}, function (err, campaigns) {
+    const userId = req.param('userId')
+    if (userId) {
+        return this.indexByUserId(req, res)
+    }
+    Campaign.find({})
+    .populate('owner')
+    .exec(function (err, campaigns) {
         if (err) {
             return res.status(500).send(err);
         }
-        return res.status(200).send(campaigns)
-    })
-    .catch((err) => {
-
+        return res.status(200).json(campaigns)
     })
 }
 
 exports.indexByUserId = (req, res) => {
+    console.log("index by userId")
     const userId = req.param('userId')
+    console.log(userId)
     Campaign.find({ownerId: userId}, function(err, campaigns) {
         if (err) {
             return res.status(500).send(err);
@@ -33,14 +38,13 @@ exports.indexByUserId = (req, res) => {
 }
 
 exports.create = (req, res) => {
-    console.log("create campaign: " + req);
     const campaign = new Campaign({
         name: req.body.name,
         shortDescription: req.body.shortDescription,
         expiredDate: req.body.expiredDate,
         coverImageUrl: req.body.coverImageUrl,
         fullDescription: req.body.fullDescription,
-        ownerId: req.userId,
+        owner: req.userId,
         categoryId: req.body.categoryId,
         statusId: req.body.statusId,
         goal: req.body.goal

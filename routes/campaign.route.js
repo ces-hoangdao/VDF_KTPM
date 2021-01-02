@@ -11,7 +11,7 @@ module.exports = function (app) {
     })
 
     app.get("/api/campaigns/index", controller.index)
-    
+
     app.post("/api/campaigns/create", [authJwt.verifyToken], controller.create)
 
     app.get("/api/campaigns/show", controller.show)

@@ -12,7 +12,9 @@ const Campaign = mongoose.model(
         },
         coverImageUrl: String,
         fullDescription: String,
-        ownerId: String,
+        owner: {
+            type: mongoose.Schema.Types.ObjectId, ref: 'User'
+        },
         categoryId: String,
         statusId: String,
         goal: Number,
