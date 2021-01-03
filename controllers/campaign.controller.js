@@ -85,7 +85,15 @@ exports.create = (req, res) => {
 
 exports.show = (req, res) => {
     const campaignId = req.param('campaignId')
-    Campaign.findById(campaignId, function(err, campaign) {
+    Campaign.findById(campaignId)
+    .populate({
+        path: 'donation',
+        populate: {
+            path: 'user'
+        }
+    })
+    .populate('owner')
+    .exec(function (err, campaign) {
         if (err) {
             return res.status(500).json({
                 success: false,
