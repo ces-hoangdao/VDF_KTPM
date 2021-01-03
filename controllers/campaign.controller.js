@@ -1,12 +1,13 @@
 const {mongoose} = require("mongoose")
 const db = require('../models')
-const Campaign = require('../models/Campaign')
 const config = require('../config/auth.config')
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 const { json } = require("body-parser");
 const { user } = require("../models");
+const Campaign = require('../models/Campaign');
+const Donation = require('../models/Donation');
 const User = require("../models/User");
 
 exports.index = (req, res) => {
@@ -30,7 +31,23 @@ exports.indexByUserId = (req, res) => {
     console.log("index by userId")
     const userId = req.param('userId')
     console.log(userId)
-    Campaign.find({ownerId: userId}, function(err, campaigns) {
+    Campaign.find({ownerId: userId})
+    .populate('ownerId','-password', User)
+    .populate('donation','',Donation)
+    .exec( function(err, campaigns) {
+        if (err) {
+            return res.status(500).send(err);
+        }
+        return res.status(200).send(campaigns)
+    })
+}
+
+exports.indexMyCampaigns = (req, res) => {
+    const userId = req.userId
+    Campaign.find({ownerId: userId})
+    .populate('ownerId','-password', User)
+    .populate('donation','',Donation)
+    .exec( function(err, campaigns) {
         if (err) {
             return res.status(500).send(err);
         }

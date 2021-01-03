@@ -12,11 +12,13 @@ module.exports = function (app) {
 
     app.get("/api/campaigns/index", controller.index)
 
+    app.get("/api/campaigns/indexMyCampaigns", [authJwt.verifyToken], controller.indexMyCampaigns)
+
     app.post("/api/campaigns/create", [authJwt.verifyToken], controller.create)
 
     app.get("/api/campaigns/show", controller.show)
 
     app.patch("/api/campaigns/update", [authJwt.verifyToken], controller.update)
 
-    app.delete("/api/campaigns/delete", [authJwt.verifyToken], controller.destroy)
+    app.post("/api/campaigns/delete", [authJwt.verifyToken], controller.destroy)
 }

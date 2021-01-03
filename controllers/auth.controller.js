@@ -34,6 +34,28 @@ exports.signUp = (req, res) => {
     }
 }
 
+exports.Me = (req, res) => {
+    User.findOne({
+        _id: req.userId
+    })
+    .exec((err, user) => {
+        if (err) {
+            res.status(500).send({message: err})
+            return
+        } else {
+            if (!user) {
+                return res.status(404).send({ message: "User not found"})
+            } else {
+                // console.log(user);
+                return res.status(200).send({
+                    ...user._doc,
+                    password: null
+                });
+            }
+        }
+    });    
+}
+
 exports.signIn = (req, res) => {
     User.findOne({
         userName: req.body.userName
